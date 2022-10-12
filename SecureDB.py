@@ -6,6 +6,7 @@ import json
 
 from sklearn.model_selection import validation_curve
 
+
 # connect to db created called "users info"
 db = mysql.connect(host="localhost",user="root",password="",database="users info") ### aqui puede que no funcione por el espacio
 #db object thata allows to run different querys, and buffered = True to run multiples querys
