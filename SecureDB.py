@@ -14,9 +14,10 @@ db = mysql.connect(host="localhost",user="root",password="",database="users info
 command_handler = db.cursor(buffered=True)
 
 def update():
-    '''
-    this function auto-updates each day the db
-    pulling the information from api'''
+    ''' # tambien es seguro por que elimina lo que ya no se tenga en la base de datos.
+    this function updates the db by deleting all information
+    and replacing all the information the information that is 
+    stored in the api.'''
     command_handler.execute("DELETE FROM users")
     db.commit()
     response_api = requests.get("https://62433a7fd126926d0c5d296b.mockapi.io/api/v1/usuarios")
@@ -119,8 +120,7 @@ def admin_session():
     update()
     '''
     In this function we have the logic for when the adming
-    acces with the valid credentials, here he could create 
-    and delete Requesters.
+    access, here he can create and delete Requesters.
     '''
     print("")
     print("Login success welcomme admin: ")
@@ -176,6 +176,11 @@ def admin_session():
             print("NOT VALID CREDENTIAL.")
 
 def requester_session(inside):
+    '''
+    This is the function where the logic for the requester user
+    is implemented, the requester can run querys with certain
+    restrictions, this restrictions can be modified to the liking
+    '''
     while 1:
         print("")
         print("Requester's Menu")
@@ -240,7 +245,10 @@ def auth_requester():
 
 
 def main():
-    
+    '''
+    a simple menu that runs on a loop and let you login as admin
+    or requester
+    '''
     while 1:
         print("")
         print("Welcome to users info database")
