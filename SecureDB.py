@@ -9,8 +9,7 @@ from sklearn.model_selection import validation_curve
 
 
 # connect to db created called "users info"
-db = mysql.connect(host="localhost",user="root",password="",database="users info") ### aqui puede que no funcione por el espacio
-#db object thata allows to run different querys, and buffered = True to run multiples querys
+db = mysql.connect(host="localhost",user="root",password="",database="users info") 
 command_handler = db.cursor(buffered=True)
 
 def update():
@@ -21,10 +20,8 @@ def update():
     command_handler.execute("DELETE FROM users")
     db.commit()
     response_api = requests.get("https://62433a7fd126926d0c5d296b.mockapi.io/api/v1/usuarios")
-    #print(response_api.status_code)
     data=response_api.text
     parse_json = json.loads(data)
-    #print(type(parse_json))
     for dict in parse_json:
         username = (dict["user_name"],)
         command_handler.execute("SELECT * FROM users WHERE user_name = %s",username)
@@ -33,12 +30,14 @@ def update():
             for item in dict:
                 vals.append(dict[item])
             vals = tuple(vals)  
-            #print(vals)
             command_handler.execute("INSERT INTO users (fec_alta,user_name,codigo_zip,credit_card_num,credit_card_ccv,cuenta_numero,direccion,geo_latitud,geo_longitud,color_favorito,foto_dni,ip,auto,auto_modelo,auto_tipo,auto_color,cantidad_compras_realizadas,avatar,fec_birthday,id) Values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",vals)
     db.commit()
 
 
 def add_restriction():
+    ''''
+    add restrictions from different tables 
+    as admin would choose '''
     print("")
     print("Register new retriction")
     insider = input(str("is the restriction for insiders? (y/n):   "))
@@ -65,6 +64,10 @@ def add_restriction():
     db.commit()
 
 def elim_restriction():
+    ''''
+    eliminate restrictions from different tables 
+    as admin would choose 
+    '''
     print("")
     print("Delete existence retriction")
     insider = input(str("is the restriction for insiders? (y/n):   "))
@@ -90,6 +93,10 @@ def elim_restriction():
     db.commit()
 
 def requester_query(inside):
+    '''
+    this function checks if the requester is from inside or outside company
+    different restrictions are checked
+    '''
     print("")
     print("Whats your Query? ")
     query = input(str(""))
