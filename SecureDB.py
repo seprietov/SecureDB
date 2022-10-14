@@ -1,11 +1,8 @@
-from site import execusercustomize
-from matplotlib.rcsetup import validate_color_or_auto
+
 import mysql.connector as mysql
 from regex import R
 import requests
 import json
-
-from sklearn.model_selection import validation_curve
 
 
 # connect to db created called "users info"
