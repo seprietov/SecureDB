@@ -2,7 +2,7 @@
 
 ___
 
-Aqui escribimos normal un parrafo como de introducción:) (este es un proyect que bla bla bla para bla bla bla ) los parrafos se separan con saltos de linea.
+Aplicación de consola donde se actualiza una base de datos relacional, por medio de web scraping, información de clientes. Esta información se hace disponible a terceros, con diferentes niveles de privilegios. El proyecto tiene como principal enfoque la seguridad de la información
 
 Como este.
 Así puedes usar **negrilla** por si la necesitas.
