@@ -30,25 +30,26 @@ Esta aplicación requiere del uso de software como XAMPP el cual permite dar hos
 
 1. Clonar el repositorio https://github.com/seprietov/SecureDB.git 
 1. Descargar la aplicación XAMPP desde https://www.apachefriends.org/download.html e instalar la aplicación.
-1. Oprimimos los siguientes botones en orden: Oprimimos “Start” para la fila “Apache”,  oprimimos “Start” para la fila “MySQL” y Oprimimos “Admin” para la fila MySQL.
-<p align="center"><img src="ejecucion1.jpg" width="50%"></p>
-1. Elegimos la opción para nueva base de datos y damos click en “Importar”.
-<p align="center"><img src="ejecucion2.jpg" width="50%"></p>
+1. Oprimimos los siguientes botones en orden: Oprimimos “Start” para la fila “Apache”,  oprimimos “Start” para la fila “MySQL” y Oprimimos “Admin” para la fila MySQL.<p align="center"><img src="ejecucion1.jpg" width="50%"></p>
+  
+1. Elegimos la opción para nueva base de datos y damos click en “Importar”.<p align="center"><img src="ejecucion2.jpg" width="50%"></p>
+  
 1. Usando la herramienta de Seleccionar archivo, ubicamos el archivo “users_info.sql”
-<p align="center"><img src="ejecucion3.jpg" width="50%"></p>
+    <p align="center"><img src="ejecucion3.jpg" width="50%"></p>
+  
 1. Damos click en la opción de “Importar”
 1. Descargamos SQLBackupAndFTP del siguiente link https://sqlbackupandftp.com/download y corremos la herramienta.
-<p align="center"><img src="ejecucion4.jpg" width="50%"></p>
+  <p align="center"><img src="ejecucion4.jpg" width="50%"></p>
 1. Nos vincularnos al servidor al que queremos conectarnos
-<p align="center"><img src="ejecucion5.jpg" width="50%"></p>
+  <p align="center"><img src="ejecucion5.jpg" width="50%"></p>
 1. Ahora seleccionamos la base de datos que nos interesa proteger de entre las bases de datos disponibles.
-<p align="center"><img src="ejecucion6.jpg" width="50%"></p>
+  <p align="center"><img src="ejecucion6.jpg" width="50%"></p>
 1. Elegimos la configuración de eliminación para nuestra base de datos (cual es el mayor tiempo en el que guardaremos la información adicional), aquí también vamos a configurar la ruta donde se van a guardar las copias de seguridad.
-<p align="center"><img src="ejecucion7.jpg" width="50%"></p>
+  <p align="center"><img src="ejecucion7.jpg" width="50%"></p>
 1. Finalmente podemos programar la frecuencia con la cual se van a crear las copias de seguridad de nuestras tablas y base de datos.
-<p align="center"><img src="ejecucion8.jpg" width="50%"></p>
+  <p align="center"><img src="ejecucion8.jpg" width="50%"></p>
 1. Ubicamos en nuestro ordenador el archivo “SecureDB.py”, abrimos el archivo con algún Entorno de Desarrollo Integrado y corremos la aplicación, un menú como el siguiente aparecerá
-<p align="center"><img src="ejecucion8.jpg" width="50%"></p>
+  <p align="center"><img src="ejecucion8.jpg" width="50%"></p>
 Al completar estos pasos, la aplicación ya estará en ejecución.
 
 
