@@ -1,6 +1,7 @@
 from site import execusercustomize
 from matplotlib.rcsetup import validate_color_or_auto
 import mysql.connector as mysql
+from regex import R
 import requests
 import json
 
@@ -36,6 +37,84 @@ def update():
     db.commit()
 
 
+def add_restriction():
+    print("")
+    print("Register new retriction")
+    insider = input(str("is the restriction for insiders? (y/n):   "))
+    print("")
+    restriction = input(str("What is the new restricted word:  ")).lower()
+    
+    query_vals = (restriction,)
+    if insider == "y":
+        command_handler.execute("SELECT * FROM insiders WHERE restriction = %s",query_vals )
+        if command_handler.rowcount > 0:
+            print("WORD ALREADY RESTRICTED")
+            return
+        command_handler.execute("INSERT INTO insiders (restriction) Values (%s)",query_vals)
+        print(restriction + " WORD HAS BEEN ADDED AS A NEW RESTRICTION")
+    elif insider == "n":
+        command_handler.execute("SELECT * FROM outsiders WHERE restriction = %s",query_vals )
+        if command_handler.rowcount > 0:
+            print("WORD ALREADY RESTRICTED")
+            return
+        command_handler.execute("INSERT INTO outsiders (restriction) Values (%s)",query_vals) 
+        print(restriction + " WORD HAS BEEN ADDED AS A NEW RESTRICTION")  
+    else:
+        ()
+    db.commit()
+
+def elim_restriction():
+    print("")
+    print("Delete existence retriction")
+    insider = input(str("is the restriction for insiders? (y/n):   "))
+    print("")
+    restriction = input(str("What is the restricted word:  ")).lower()
+    query_vals = (restriction,)
+    if insider == "y":
+        command_handler.execute("SELECT * FROM insiders WHERE restriction = %s",query_vals )
+        if command_handler.rowcount == 0:
+            print(restriction+" WORD IS NOT RESTRICTED YET")
+            return
+        command_handler.execute("DELETE FROM insiders WHERE restriction = %s",query_vals)
+        print(restriction+" HAS BEEN REMOVED FROM RESTRICTED WORDS")
+    elif insider == "n":
+        command_handler.execute("SELECT * FROM outsiders WHERE restriction = %s",query_vals )
+        if command_handler.rowcount == 0:
+            print(restriction+" WORD IS NOT RESTRICTED YET")
+            return
+        command_handler.execute("DELETE FROM outsiders WHERE restriction = %s",query_vals)
+        print(restriction+" HAS BEEN REMOVED FROM RESTRICTED WORDS")
+    else:
+        print("INPUT NOT CLEAR") 
+    db.commit()
+
+def requester_query(inside):
+    print("")
+    print("Whats your Query? ")
+    query = input(str(""))
+    query = query.lower()
+    if inside == "y":
+        command_handler.execute("SELECT restriction FROM insiders")
+        not_allowed = command_handler.fetchall()
+    elif inside == "n":
+        command_handler.execute("SELECT restriction FROM outsiders")
+        not_allowed = command_handler.fetchall()
+    else:
+        print("INPUT NOT CLEAR")
+        return (0,)
+    count = 0
+
+    for item in not_allowed:
+        if item[0] in query:
+            count = count + 1
+    if count == 0:
+        command_handler.execute(query)
+        records = command_handler.fetchall()
+    else:
+        return (0,)
+
+    return records
+
 def admin_session():
     update()
     '''
@@ -50,7 +129,9 @@ def admin_session():
         print("Admin Menu")
         print("1. Create new Requester")
         print("2. Delete existing Requester")
-        print("3. Log out")
+        print("3. Create new restriction")
+        print("4. Delete restriction")
+        print("5. Log out")
 
         user_option = input(str(("Option:  ")))
         if user_option == "1":
@@ -61,13 +142,18 @@ def admin_session():
             inside = input(str("Requester from inside company? (y/n):  "))
             responsable = input(str("What is the name of the person in charged?:  "))
             query_vals = (requestername,password,inside,responsable)
-            command_handler.execute("INSERT INTO Requesters (requestername, password, inside) Values (%s,%s,%s)",query_vals)
+            req_vals = (requestername,)
+            command_handler.execute("SELECT * FROM requesters WHERE requestername = %s",req_vals)
+            if command_handler.rowcount > 0:
+                print("the requester "+requestername+" in already registered")
+                continue
+            command_handler.execute("INSERT INTO Requesters (requestername, password, inside,responsable) Values (%s,%s,%s,%s)",query_vals)
             db.commit()
             print(requestername + " has been registered as a requester")
         elif user_option == "2":
             print("")
-            print("Delete Requester Student Account: ")
-            requestername = input(str("Studen Requestername:  "))
+            print("Delete Requester Account: ")
+            requestername = input(str("Requestername:  "))
             inside = input(str("Requester from inside company? (y/n):  "))
             responsable = input(str("What is the name of the person in charged?:  ")) #esta parte se agrega como seguridad de confirmacion
             query_vals = (requestername,inside, responsable)
@@ -80,12 +166,16 @@ def admin_session():
                 print("")
                 print(requestername + " has been deleted") 
         elif user_option == "3":
+            add_restriction()
+        elif user_option == "4":
+            elim_restriction()
+        elif user_option == "5":
             break
         else:
             print("")
             print("NOT VALID CREDENTIAL.")
 
-def requester_session():
+def requester_session(inside):
     while 1:
         print("")
         print("Requester's Menu")
@@ -94,23 +184,15 @@ def requester_session():
         user_option = input(str("Option:  "))
         if user_option == "1":
             while 1:
-                print("Whats your Query? ")
-                query = input(str(""))
-                query = query.lower()
-                no_allowed = ["admins","requesters","delete"] ## esto se hace para lograr mas seguridad impique que cualquier apueda ingreasar a la info
-                count = 0
-                for item in no_allowed:
-                    if item not in query:
-                        count = count + 1
-                if count == len(no_allowed):
-                    command_handler.execute(query)
-                    records = command_handler.fetchall()
+                records = requester_query(inside)
+                if records == (0,):
+                    print("QUERY NOT ALLOWED.")
+                    break
+                else:
                     for record in records:
                         print("")
-                        print(record)
-                    break
-                else: 
-                    print("QUERY NOT ALLOWED.")
+                        print(record) 
+                    break     
         elif user_option == "2":
             break
         else:
@@ -125,7 +207,7 @@ def auth_admin():
     print("")
     print("Admin login")
     print("")
-    username = input(str("Adminname:  "))
+    username = input(str("Admin name:  "))
     password = input(str("Password:  "))
     query_vals = (username,password)
     command_handler.execute("SELECT * FROM admins WHERE admin_name = %s AND password = %s",query_vals)
@@ -133,7 +215,7 @@ def auth_admin():
         print("Login not recognized")
     else:
         print("Welcome Admin: {}".format(username))
-        requester_session()
+        admin_session()
 
 
 def auth_requester():
@@ -153,7 +235,7 @@ def auth_requester():
         print("Login not recognized")
     else:
         print("Welcome requester {}".format(requestername))
-        requester_session()
+        requester_session(inside)
 
 
 
